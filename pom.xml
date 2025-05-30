@@ -1,87 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sonarqube.example</groupId>
-    <artifactId>sonarqube-maven-example</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.4.RELEASE</version>
+        <relativePath/>
+    </parent>
 
-    <name>Example of basic Maven project to integrate with SonarQube</name>
+    <groupId>com.dpt3</groupId>
+    <artifactId>login</artifactId>
+    <version>release</version>
+    <packaging>war</packaging>
+
+    <name>login</name>
+    <description>DPT DevOps project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <sonar.organization>dpt3pro</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper</artifactId>
+            <version>9.0.31</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.6.0.1398</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.4</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.dpt3.login.LoginApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>sonar</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <!-- Optional URL to server. Default value is http://localhost:9000 -->
-                <sonar.host.url>
-                    http://localhost:9000
-                </sonar.host.url>
-            </properties>
-        </profile>
-        <profile>
-            <id>coverage</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>
