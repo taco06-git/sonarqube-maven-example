@@ -7,21 +7,26 @@ docker run -d --name jenkins -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
 
 
 step 1 :  create a custom network
+------------------------------------
 $ docker network create devops-net
 
 
 Step 2: Connect both containers to devops-net
 Attach Jenkins:
+--------------------------------------------------
+
 $ docker network connect devops-net Jenkins
 
 Attach SonarQube:
+---------------------------------------------------
 $ docker network connect devops-net sonarqube
 
-
+REPO
+-------------------------------------------------------------------------
 git repo :  https://github.com/taco06-git/sonarqube-maven-example.git
 
 pipeline : 
-
+----------------------------------------------------------------------
 pipeline {
     agent any
     tools {
@@ -53,6 +58,7 @@ pipeline {
 }
 
 Plugins: sonarqube scanner
+---------------------------------------------------------------------------
 
 manage jenkins- credentials - secret text ( add token generated from sonarqube)
 
