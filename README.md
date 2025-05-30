@@ -1,29 +1,62 @@
-# SonarQube Basic Maven Example
+SonarQube and Jenkins (container ) with maven
+==============================================
 
-This simple Maven project is importing JaCoCo's coverage report.
-<br /><br />
+docker run -d --name sonarqube -p 9000:9000 sonarqube:lts
 
-## Usage
+docker run -d --name jenkins -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
 
-* Download SonarQube which matches with your Java version from [here](https://www.sonarqube.org/downloads/)
 
-* Start the SonarQube server\
-**For Windows**\
-`YOUR_DIR_PATH\sonarqube\bin\windows-x86-xx\StartSonar.bat`\
-**For other operating systems like Linux/Ubuntu**\
-`YOUR_DIR_PATH/sonarqube/bin/[OS]/sonar.sh console`
+step 1 :  create a custom network
+$ docker network create devops-net
 
-* Once the SonarQube Server is up and running then you can visit the SonarQube Dashboard at http://localhost:9000/dashboard/ \
-Default System administrator credentials are **admin/admin**
 
-* Build the project, execute all the tests and analyze the project with SonarQube Scanner for Maven\
-**`mvn clean verify sonar:sonar`**\
-or\
-**`mvn clean install sonar:sonar`**
-        
-* Click on the project name to see the code quality inspection
-<br />
+Step 2: Connect both containers to devops-net
+Attach Jenkins:
+$ docker network connect devops-net Jenkins
 
-## Documentation
+Attach SonarQube:
+$ docker network connect devops-net sonarqube
 
-[SonarScanner for Maven](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-maven/)
+
+git repo :  https://github.com/taco06-git/sonarqube-maven-example.git
+
+pipeline : 
+
+pipeline {
+    agent any
+    tools {
+        maven 'MAVEN'  // Uses Maven tool configured in Jenkins
+    }
+    environment {
+        GIT_REPO = 'https://github.com/taco06-git/sonarqube-maven-example.git'
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: "${GIT_REPO}", branch: 'master'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Code Analysis') {
+            steps {
+                withSonarQubeEnv('SONARSERVER') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+      
+    }
+}
+
+Plugins: sonarqube scanner
+
+manage jenkins- credentials - secret text ( add token generated from sonarqube)
+
+manage jenkins - http://sonarqube:9000 (sonarqube is the container , its willl be resolved because container is added to custom network) and then add credentials (secet text + token)
+
+manage jenkins - tools - install sonarque scanner + maven automatically 
+
