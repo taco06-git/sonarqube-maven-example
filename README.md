@@ -66,3 +66,8 @@ manage jenkins - http://sonarqube:9000 (sonarqube is the container , its willl b
 
 manage jenkins - tools - install sonarque scanner + maven automatically 
 
+archetype:
+mvn archetype:generate -DgroupId=com.example -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+
+
