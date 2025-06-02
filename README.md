@@ -66,6 +66,20 @@ manage jenkins - http://sonarqube:9000 (sonarqube is the container , its willl b
 
 manage jenkins - tools - install sonarque scanner + maven automatically 
 
+****JAVA
+Since you're running Jenkins inside a Docker container, you need to install Java within the container itself. By default, the official Jenkins Docker image comes with a pre-installed version of Java. However, if you need a specific version or encounter issues, here’s what you can do:
+
+$ docker exec -it jenkins java --version 
+openjdk 21.0.7 2025-04-15 LTS OpenJDK Runtime Environment Temurin-21.0.7+6 (build 21.0.7+6-LTS) OpenJDK 64-Bit Server VM Temurin-21.0.7+6 (build 21.0.7+6-LTS, mixed mode)
+
+now in jenkins console , i go to manage jenkins , tools , what path should i set for JAVA_HOME ??
+$ docker exec -it jenkins bash -c 'readlink -f $(which java)'
+
+This should return something like:  /opt/java/openjdk/bin/java   The JAVA_HOME path is everything up to /bin/java, so in this case, it would be:
+JAVA_HOME=/opt/java/openjdk
+
+
+
 archetype:
 mvn archetype:generate -DgroupId=com.example -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
