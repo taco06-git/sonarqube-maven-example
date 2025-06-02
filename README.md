@@ -78,6 +78,25 @@ $ docker exec -it jenkins bash -c 'readlink -f $(which java)'
 This should return something like:  /opt/java/openjdk/bin/java   The JAVA_HOME path is everything up to /bin/java, so in this case, it would be:
 JAVA_HOME=/opt/java/openjdk
 
+------------
+
+tools cn be provided in two ways 
+
+1) if u have installed maven on local ec2 instance manually .
+pipeline{
+    agent any
+    environment {
+        PATH = "$PATH:/opt/apache-maven-3.8.2/bin"
+    }
+
+2.  if you are using maven from Jenkins - manage jenkins- tools - install automatically 
+
+pipeline {
+    agent any
+    tools {
+        maven 'MAVEN'  // Uses Maven tool configured in Jenkins
+    }
+
 
 
 archetype:
